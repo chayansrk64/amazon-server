@@ -32,7 +32,11 @@ async function run() {
     const productsCollection = client.db('amazonDB').collection('products')
 
     app.get('/products', async(req, res)=> {
-        const result = await productsCollection.find().toArray();
+      console.log(req.query);
+        const page = parseInt(req.query.page) || 0;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = page * limit;
+        const result = await productsCollection.find().skip(skip).limit(limit).toArray();
         res.send(result);
     })
 
